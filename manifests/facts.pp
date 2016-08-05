@@ -11,6 +11,7 @@ class puppet::facts (
   include ::puppet
   include ::puppet::defaults
   $facterbasepath = $::puppet::defaults::facterbasepath
+  $puppet_group   = $::puppet::puppet_group
 
   if $custom_facts {
     validate_hash($custom_facts)
@@ -19,7 +20,7 @@ class puppet::facts (
   file { "${facterbasepath}/facts.d/local.yaml":
     ensure  => file,
     owner   => 'root',
-    group   => 'puppet',
+    group   => $puppet_group,
     mode    => '0640',
     content => template('puppet/local_facts.yaml.erb'),
   }

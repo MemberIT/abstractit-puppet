@@ -210,6 +210,11 @@ class puppet (
     false   => false,
   }
 
+  $puppet_group = $allinone ? {
+     true    => 'root',
+     default => 'puppet',
+  }
+
   if $manage_repos {
     #only manage this if we're managing repos
     include ::puppet::repo
@@ -219,7 +224,7 @@ class puppet (
     file { $facterbasepath:
       ensure => directory,
       owner  => 'root',
-      group  => 'puppet',
+      group  => $puppet_group,
       mode   => '0755',
     }
   }
@@ -228,7 +233,7 @@ class puppet (
     file { "${facterbasepath}/facts.d":
       ensure => directory,
       owner  => 'root',
-      group  => 'puppet',
+      group  => $puppet_group,
       mode   => '0755',
     }
   }
