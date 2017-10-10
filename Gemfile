@@ -23,7 +23,7 @@ group :test do
   gem 'rubocop',                '0.41.2',                 :require => false
   gem "puppet-blacksmith",                                :require => false
   gem 'pry',                    '<= 0.9.8',               :require => false
-  gem 'puppet-lint',                                      :require => false
+  gem 'puppet-lint',            '2.0.2',                  :require => false
   gem 'puppet-lint-unquoted_string-check',                :require => false
   gem 'puppet-lint-empty_string-check',                   :require => false
   gem 'puppet-lint-leading_zero-check',                   :require => false
@@ -55,6 +55,10 @@ end
 #   gem 'serverspec',    :require => false
 #   gem 'beaker-puppet_install_helper', :require => false
 # end
+
+# puppet requires json_pure; json_pure > 2.0.1 requires Ruby 2
+# so force the older json_pure in the case of older ruby
+gem 'json_pure', '< 2.0.2', :require => false, :platforms => [:ruby_18, :ruby_19]
 
 if puppetversion = ENV['PUPPET_GEM_VERSION']
   gem 'puppet', puppetversion, :require => false

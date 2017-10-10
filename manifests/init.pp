@@ -19,6 +19,8 @@
 #   Declares the version of the puppet-agent all-in-one package to install.
 # @param ca_server [String] Default: undef
 #   Server to use as the CA server for all agents.
+# @param ca_port [String]
+#   Port to use as the CA server for all agents.
 # @param cfacter [Boolean] Default: false
 #   Whether or not to use cfacter instead of facter.
 # @param collection [String] Default: undef
@@ -66,6 +68,8 @@
 #   Whether or not to send reports
 # @param runinterval [String] Default: '30m'
 #   Sets the runinterval in puppet.conf
+# @param show_diff [Boolean] Default: false
+#   Sets the show_diff parameter in puppet.conf
 # @param splay [Boolean] Default: false
 #   Sets the splay parameter in puppet.conf
 # @param splaylimit [String] Default: undef
@@ -101,6 +105,7 @@ class puppet (
   $agent_cron_min                 = 'two_times_an_hour',
   $agent_version                  = 'installed',
   $ca_server                      = undef,
+  $ca_port                        = undef,
   $cfacter                        = false,
   $collection                     = undef,
   $custom_facts                   = undef,
@@ -122,6 +127,7 @@ class puppet (
   $puppet_version                 = 'installed',
   $reports                        = true,
   $runinterval                    = '30m',
+  $show_diff                      = false,
   $splay                          = false,
   $splaylimit                     = undef,
   $structured_facts               = false,
@@ -141,6 +147,7 @@ class puppet (
     $manage_etc_facter_facts_d,
     $manage_repos,
     $reports,
+    $show_diff,
     $splay,
     $structured_facts,
   )
@@ -148,6 +155,7 @@ class puppet (
   validate_string(
     $agent_version,
     $ca_server,
+    $ca_port,
     $collection,
     $environment,
     $facter_version,
@@ -180,16 +188,16 @@ class puppet (
     case $agent_cron_min {
       #provide a co
       'two_times_an_hour': {
-        $min=fqdn_rand(29)
+        $min=fqdn_rand(29) + 0  # fqdn_rand used to return a string prior to 4.0?
         $min_2=$min + 30
         $agent_cron_min_interpolated = [ $min, $min_2 ]
       }
     'four_times_an_hour': {
-        $min=fqdn_rand(14)
+        $min=fqdn_rand(14) + 0  # fqdn_rand used to return a string prior to 4.0?
         $min_2=$min + 15
         $min_3=$min + 30
         $min_4=$min + 45
-        $agent_cron_min_interpolated = [$min, $min_2, $min_3, $min_4 ]
+        $agent_cron_min_interpolated = [ $min, $min_2, $min_3, $min_4 ]
       }
       default: {
         #the variable is populated. feed that to the cronjob

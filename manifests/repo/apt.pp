@@ -19,26 +19,32 @@ class puppet::repo::apt {
     if $::puppet::collection != undef {
       $lc_collection_name = downcase($::puppet::collection)
       apt::source { "puppetlabs-${lc_collection_name}":
-        ensure     => 'present',
-        location   => 'http://apt.puppetlabs.com',
-        repos      => $::puppet::collection,
-        key        => '47B320EB4C7C375AA9DAE1A01054B7A24BD6EC30',
-        key_server => 'pgp.mit.edu',
+        ensure   => 'present',
+        location => 'http://apt.puppetlabs.com',
+        repos    => $::puppet::collection,
+        key      => {
+          'id'     => '6F6B15509CF8E59E6E469F327F438280EF8D349F',
+          'server' => 'pgp.mit.edu',
+        },
       }
     } else {
       apt::source { 'puppetlabs':
-        ensure     => $source_ensure,
-        location   => 'http://apt.puppetlabs.com',
-        repos      => 'main dependencies',
-        key        => '47B320EB4C7C375AA9DAE1A01054B7A24BD6EC30',
-        key_server => 'pgp.mit.edu',
+        ensure   => $source_ensure,
+        location => 'http://apt.puppetlabs.com',
+        repos    => 'main dependencies',
+        key      => {
+          'id'     => '6F6B15509CF8E59E6E469F327F438280EF8D349F',
+          'server' => 'pgp.mit.edu',
+        },
       }
       apt::source { 'puppetlabs_devel':
-        ensure     => $devel_ensure,
-        location   => 'http://apt.puppetlabs.com',
-        repos      => 'devel',
-        key        => '47B320EB4C7C375AA9DAE1A01054B7A24BD6EC30',
-        key_server => 'pgp.mit.edu',
+        ensure   => $devel_ensure,
+        location => 'http://apt.puppetlabs.com',
+        repos    => 'devel',
+        key      => {
+          'id'     => '6F6B15509CF8E59E6E469F327F438280EF8D349F',
+          'server' => 'pgp.mit.edu',
+        },
       }
     }
 
